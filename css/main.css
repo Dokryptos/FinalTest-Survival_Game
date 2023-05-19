@@ -1,0 +1,18 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgba(2, 130, 2, 0.704);
+}
+#board{
+    height: 100vh;
+    position: relative;
+
+}
+#player{
+    background-color: rgb(204, 198, 198);
+    position: absolute;
+}
+#ennemi{
+    background-color: crimson;
+    position: absolute;
+}
