@@ -15,45 +15,50 @@ class Game{
             this.zombieArr.push(newZombie);
         }, 2000)
 
+
         setInterval(() => {
             this.zombieArr.forEach((e) => {
 
-                zombieMouvement(e)
+                e.zombieMouvement()
 
                 this.detectCollision(e)
 
 
             })
         }, 50)
-    
+        
+        setInterval(() =>{
+            const newBonus = new bonus();
+            this.bonusArr.push(newBonus);
+        }, 10000)
     
     }
-    detectCollision(obstacleInstance){ 
+    detectCollision(zombie){ 
     // il creer une collision et alert(GAme Over)
     if(
-    obstacleInstance.positionX < this.player.positionX + this.player.width &&
-    obstacleInstance.positionX + obstacleInstance.width > this.player.positionX &&
-    obstacleInstance.positionY < this.player.positionY + this.player.height &&
-    obstacleInstance.height + obstacleInstance.positionY > this.player.positionY
+    zombie.positionX < this.player.positionX + this.player.width &&
+    zombie.positionX + zombie.width > this.player.positionX &&
+    zombie.positionY < this.player.positionY + this.player.height &&
+    zombie.height + zombie.positionY > this.player.positionY
     ){
      alert('game Over')
     }
     }
     eventListener(){
     document.addEventListener('keydown', (event) => {
-        if(event.code === 'ArrowRight'){
+        if(event.code == 'ArrowRight'){
             this.player.moveRight();
         }
-        else if (event.code === 'ArrowLeft'){
+        else if (event.code == 'ArrowLeft'){
             this.player.moveLeft();
         }
-        else if (event.code === 'ArrowDown'){
+        else if (event.code == 'ArrowDown'){
             this.player.moveDown();
         }
-        else if (event.code === 'ArrowUp'){
+        else if (event.code == 'ArrowUp'){
             this.player.moveUp();
         }
-        else if (event.code === 'SpaceBar'){
+        else if (event.code == 'SpaceBar'){
             this.player.shoot();
         }
         })
@@ -178,7 +183,6 @@ class zombie{
     }
 
     zombieMouvement(){
-
         if(this.player.positionY < this.zombie.positionY){
         this.zombie.positionY--;
         }else{
