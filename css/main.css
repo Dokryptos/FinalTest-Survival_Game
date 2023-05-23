@@ -17,17 +17,29 @@ body{
     border-radius: 6em;
     transform: translate(-50%, -50%);
 }
-#zombie{
+.zombie{
     position: absolute;
     border-radius: 6em;
     
 }
-#bonus{
+.bonus{
     background-color: rgba(230, 175, 9, 0.993);
     position: absolute;
     border-radius: 6em;
 }
-#boss{
+.boss{
     position: absolute;
     border-radius: 6em;
+}
+#counter{
+    position: fixed;
+    font-size: 20em;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: rgb(255, 255, 255);
+}
+
+.bullet{
+    position: absolute;
+    background-color: black;
+    border: 2em;
 }

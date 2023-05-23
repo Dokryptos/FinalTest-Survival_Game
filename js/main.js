@@ -5,52 +5,64 @@ class Game{
         this.bulletArr= [];
         this.bonusArr = [];
         this.bossArr =[];
+
         this.time = [];
         this.point = 0;
         }
+
     start(){
-        this.player = new player();
+        this.player = new Player();
         this.eventListener()
 
         setInterval(() => {
             const newZombie = new Zombie();
             this.zombieArr.push(newZombie);
         }, 2000)
-
-        setInterval(() =>{
-            const newBonus = new bonus();
-            this.bonusArr.push(newBonus);
-        }, 10000)
-    
-        // setInterval(() =>{
-        //     const newBoss = new zombieBoss();
-        //     this.bossArr.push(newBoss);
-        // }, 25000);
-        
         
         setInterval(() =>{
             console.log(this.zombieArr)
+
             this.zombieArr.forEach((elm) => {
                 console.log(elm)
+
                 
+
                 elm.zombieMouvement(this.player)
 
-                if(this.detectCollision(elm) === true){
-                    alert('game Over')
-                }
+                this.detectCollision(elm)
+                    
+                
+            
             })
-        }, 3000)
+        }, 300)
 
+        
+        // setInterval(() =>{
+        //     const newBoss = new ZombieBoss();
+        //     this.bossArr.push(newBoss);
+        // }, 25000);
+        
         setInterval(() =>{
-            this.bossArr.forEach((elm) => {
+            //updateBullet()
 
-                this.zombieMouvement(elm)
+            this.bossArr.forEach((elm) => {
+                console.log(elm)
+
+                zombieMouvement(elm)
 
                 if(this.detectCollision(elm) === true){
                     alert('game Over')
                 }
+
             })
         }, 200)
+
+
+
+        setInterval(() =>{
+            const newBonus = new Bonus();
+            this.bonusArr.push(newBonus);
+        }, 10000)
 
         setInterval(() =>{
             this.bonusArr.forEach((elm) => {
@@ -62,7 +74,15 @@ class Game{
             })
         }, 500)
         
+        
+        
     }
+
+
+
+
+
+
 
     detectCollision(zombieInstance){ 
     // il creer une collision et alert(GAme Over)
@@ -72,7 +92,7 @@ class Game{
     zombieInstance.positionY < this.player.positionY + this.player.height &&
     zombieInstance.height + zombieInstance.positionY > this.player.positionY
     ){
-        return true
+        alert('game Over')
     }
     }
     eventListener(){
@@ -89,13 +109,17 @@ class Game{
         else if (event.code === 'ArrowUp'){
             this.player.moveUp();
         }
-        else if (event.code === 'SpaceBar'){
-            this.player.reload();
-        }
-        else if(event.code === 'click'){
-            this.player.shoot();
-        }
         })
+
+    document.addEventListener('click', (event) =>{
+                    
+            const newBullet = new Bullet(this.player.positionX, this.player.positionY, event.clientX, event.clientY)
+             this.bulletArr.push(newBullet); 
+             
+        }
+    )
+        
+       
     
     const playerImgId = document.getElementById('player')
 
@@ -111,15 +135,22 @@ class Game{
     }
 
     }
+    addCounter(){
+        const pointCounter = document.getElementById('counter');    
+        pointCounter.textContent(this.point)
+    }
 
 }
 
-class player{
+class Player{
     constructor(){
     this.positionX = 50;
     this.positionY = 50;
     this.width = 4;
     this.heigth = 8;
+    this.dir = 0
+
+
     this.domPlayer = null
     
     this.createPlayer();
@@ -176,33 +207,32 @@ class player{
             this.domPlayer.style.left = this.positionX +'vw'
         }
     }
-    reload(){
-
-    }
-    shoot(){
-
-    }
 }
 
 
 
-class bullet{
-    constructor(){
-     this.bulletX = this.player.positionX + this.player.width/2;
-     this.bulletY = this.player.positionY; 
+class Bullet{
+    constructor(playerX, playerY, targetX, targetY){
+     this.bulletX = playerX + playerX.width/2;
+     this.bulletY = playerY; 
      this.speed = 5;
      this.delay = 8;
-     this.damage = 1;
+     this.targetX = targetX
+     this.targetY = targetY
 
-     this.width = 1
-     this.height = 1
+     this.directionX = (this.targetX - this.bulletX)/ this.speed
+     this.directionY = (this.targetY - this.bulletY) / this.speed
+
+     this.width = 0.5;
+     this.height = 0.5;
      this.domBullet = null
-     createBullet()
+        
+
     }
     createBullet(){
-        this.domBullet = document.createElement("img")
+        this.domBullet = document.createElement("div")
 
-        this.domBullet.id = 'bullet'
+        this.domBullet.className = 'bullet'
         this.domBullet.style.height = this.heigth + 'vh';
         this.domBullet.style.width = this.width + 'vw';
         this.domBullet.style.bottom = this.bulletY + 'vh';
@@ -212,6 +242,10 @@ class bullet{
         
         const bulletId = document.getElementById('board');
         bulletId.appendChild(this.domBullet);
+    }
+    updateBullet(){
+        this.domBullet.style.left = this.bulletX += this.directionX;
+        this.domBullet.style.bottom = this.bulletY += this.directionY;
     }
 }
        
@@ -224,14 +258,20 @@ class Zombie{
         this.width = 3.5;
         this.heigth = 7;
         this.health = 2
+        this.speed = 1
 
         this.domZombie = null
         this.createZombie()
+        
+    }
+    moveRight(){
+        this.positionX++;
+        this.domZombie.style.left = this.positionX + 'vw'
     }
 
     createZombie(){
         this.domZombie = document.createElement('img');
-        this.domZombie.id = 'zombie'
+        this.domZombie.className = 'zombie'
 
         this.domZombie.style.bottom = this.positionY + 'vh'
         this.domZombie.style.left = this.positionX + 'vw'
@@ -243,24 +283,36 @@ class Zombie{
         zombieId.appendChild(this.domZombie);
     }
     zombieMouvement(player){
-        if(player.positionY < this.domZombie.positionY){
-            this.domZombie.positionY--;
-            this.domZombie.style.bottom = this.domZombie.positionY +'vh'
-        }else{
-            this.domZombie.positionY++;
-            this.domZombie.style.bottom = this.domZombie.positionY +'vh'
-        }
-        if(player.positionX < this.domZombie.positionX){
-            this.domZombie.positionX--;
-            this.domZombie.style.left = this.domZombie.positionX +'vw'
-        } else {
-            this.domZombie.positionX++;
-            this.domZombie.style.left = this.domZombie.positionX +'vw'
-        }
+        const distX = player.positionX - this.positionX;
+        const distY = player.positionY - this.positionY;
+        const distance = Math.sqrt(distX * distX + distY * distY)
+
+        const vx = (distX / distance) * this.speed;
+        const vy = (distY / distance) * this.speed;
+
+        this.positionX += vx;
+        this.positionY += vy
+
+        this.domZombie.style.left = this.positionX + 'vw';
+        this.domZombie.style.bottom = this.positionY + 'vh'
+    //     if(player.positionY < this.domZombie.positionY){
+    //         this.domZombie.positionY--;
+    //         this.domZombie.style.bottom = this.domZombie.positionY +'vh'
+    //     }else{
+    //          this.domZombie.positionY++;
+    //          this.domZombie.style.bottom = this.domZombie.positionY +'vh'
+    //      }
+    //      if(player.positionX < this.domZombie.positionX){
+    //          this.domZombie.positionX--;
+    //          this.domZombie.style.left = this.domZombie.positionX +'vw'
+    //     } else {
+    //          this.domZombie.positionX++;
+    //          this.domZombie.style.left = this.domZombie.positionX +'vw'
+    //     }
     }
 }
 
-/*class zombieBoss{
+/*class ZombieBoss{
     constructor(){
         this.positionX = Math.random() * (100 - 0);
         this.positionY = Math.random() * (100 - 0);
@@ -274,7 +326,7 @@ class Zombie{
 
     createZombie(){
         this.domZombie2 = document.createElement('img');
-        this.domZombie2.id = 'boss'
+        this.domZombie2.className = 'boss'
 
         this.domZombie2.style.bottom = this.positionY + 'vh'
         this.domZombie2.style.left = this.positionX + 'vw'
@@ -290,7 +342,7 @@ class Zombie{
 
 
 
-class bonus{
+class Bonus{
 
     constructor(){
         this.positionX = Math.random() * (95 - 1);
@@ -304,7 +356,7 @@ class bonus{
 
     createBonus(){
         this.domBonus = document.createElement('div');
-        this.domBonus.id = 'bonus'
+        this.domBonus.className = 'bonus'
 
         this.domBonus.style.bottom = this.positionY + 'vh'
         this.domBonus.style.left = this.positionX + 'vw'
