@@ -5,8 +5,9 @@ class Game{
         this.bulletArr= [];
         this.bonusArr = [];
         this.bossArr =[];
+        this.gameOver = false
 
-        this.time = [];
+        this.timer = 0;
         this.point = 0;
         }
 
@@ -20,81 +21,119 @@ class Game{
         }, 2000)
         
         setInterval(() =>{
-            console.log(this.zombieArr)
 
             this.zombieArr.forEach((elm) => {
-                console.log(elm)
-
-                
-
                 elm.zombieMouvement(this.player)
-
-                this.detectCollision(elm)
-                    
-                
-            
             })
+
+            this.bulletArr.forEach((elm) => {
+                elm.update()
+            })
+
+            this.bulletArr.forEach((bullet) => {
+                this.zombieArr.forEach((enemy) => {
+                    if(enemy.checkCollisionBullet(bullet)){
+                        this.deleteZombie(enemy);
+                        this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
+                    }
+                });
+            });
+
+            this.zombieArr.forEach((zombie) => {
+                const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
+                if(distance <= 5){
+                    alert('gameOver')
+                }
+            })
+
+
         }, 300)
 
         
-        // setInterval(() =>{
-        //     const newBoss = new ZombieBoss();
-        //     this.bossArr.push(newBoss);
-        // }, 25000);
+        setInterval(() =>{
+             const newBoss = new ZombieBoss();
+             this.bossArr.push(newBoss);
+        }, 25000);
         
         setInterval(() =>{
-            //updateBullet()
 
             this.bossArr.forEach((elm) => {
-                console.log(elm)
-
-                zombieMouvement(elm)
-
-                if(this.detectCollision(elm) === true){
-                    alert('game Over')
-                }
-
+                elm.bossZombieMouvement(this.player)
             })
-        }, 200)
 
+
+
+            this.bulletArr.forEach((bullet) => {
+                this.bossArr.forEach((enemy) => {
+                    if(enemy.checkCollisionBullet(bullet)){
+                        this.deleteBossZombie(enemy);
+                        this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
+                    }
+                });
+            });
+
+
+            this.bossArr.forEach((zombie) => {
+                const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
+                if(distance <= 5){
+                    alert('gameOver')
+                }
+            })
+
+        }, 300)
 
 
         setInterval(() =>{
             const newBonus = new Bonus();
             this.bonusArr.push(newBonus);
-        }, 10000)
+        }, 5000)
 
         setInterval(() =>{
-            this.bonusArr.forEach((elm) => {
 
-                if(this.detectCollision(elm) === true){
-                    this.point += 100;
-                    elm.remove()
+            this.bonusArr.forEach((bonus) => {
+                const distance = Math.sqrt((bonus.positionX - this.player.positionX) ** 2 + (bonus.positionY - this.player.positionY) **2);
+                if(distance <= 5){
+                    
+                    this.deleteBonus(bonus)
+                    
+
+                    this.point += 200;                
                 }
             })
-        }, 500)
-        
-        
-        
+             
+        }, 300)
+
+        setInterval(() =>{
+            this.timer++;
+        }, 1000)
     }
 
 
 
-
-
-
-
-    detectCollision(zombieInstance){ 
-    // il creer une collision et alert(GAme Over)
-    if(
-    zombieInstance.positionX < this.player.positionX + this.player.width &&
-    zombieInstance.positionX + zombieInstance.width > this.player.positionX &&
-    zombieInstance.positionY < this.player.positionY + this.player.height &&
-    zombieInstance.height + zombieInstance.positionY > this.player.positionY
-    ){
-        alert('game Over')
+    deleteBossZombie(zombie){
+        const index = this.bossArr.indexOf(zombie)
+        if(index !== -1){
+            this.bossArr.splice(index, 1);
+        }
     }
+
+    deleteZombie(zombie){
+        const index = this.zombieArr.indexOf(zombie)
+        if(index !== -1){
+            this.zombieArr.splice(index, 1);
+        }
     }
+
+    deleteBonus(bonus){
+        const index = this.bonusArr.indexOf(bonus)
+        if(index !== -1){
+            this.bonusArr.splice(index, 1);
+            
+        }
+
+
+    }
+
     eventListener(){
     document.addEventListener('keydown', (event) => {
         if(event.code === 'ArrowRight'){
@@ -112,15 +151,16 @@ class Game{
         })
 
     document.addEventListener('click', (event) =>{
-                    
-            const newBullet = new Bullet(this.player.positionX, this.player.positionY, event.clientX, event.clientY)
-             this.bulletArr.push(newBullet); 
-             
-        }
-    )
+        // event.preventDefault();
+        // const newBullet = new Bullet(this.player.positionX, this.player.positionY, event.clientX, event.clientY)
+        // this.bulletArr.push(newBullet); 
+        // }
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        const bullet = this.player.shoot(mouseX, mouseY)
+        this.bulletArr.push(bullet);
+    });
         
-       
-    
     const playerImgId = document.getElementById('player')
 
     document.addEventListener('mousemove', handleMouseMove)
@@ -139,8 +179,9 @@ class Game{
         const pointCounter = document.getElementById('counter');    
         pointCounter.textContent(this.point)
     }
-
+    
 }
+
 
 class Player{
     constructor(){
@@ -207,16 +248,21 @@ class Player{
             this.domPlayer.style.left = this.positionX +'vw'
         }
     }
+    shoot(mouseX, mouseY){
+        const bullet = new Bullet(this.positionX, this.positionY, mouseX, mouseY);
+        return bullet;
+    }
+
 }
 
 
 
 class Bullet{
     constructor(playerX, playerY, targetX, targetY){
-     this.bulletX = playerX + playerX.width/2;
+     this.bulletX = playerX;
      this.bulletY = playerY; 
      this.speed = 5;
-     this.delay = 8;
+
      this.targetX = targetX
      this.targetY = targetY
 
@@ -227,25 +273,34 @@ class Bullet{
      this.height = 0.5;
      this.domBullet = null
         
-
+     createBullet()
     }
     createBullet(){
         this.domBullet = document.createElement("div")
-
         this.domBullet.className = 'bullet'
+
         this.domBullet.style.height = this.heigth + 'vh';
         this.domBullet.style.width = this.width + 'vw';
         this.domBullet.style.bottom = this.bulletY + 'vh';
         this.domBullet.style.left = this.bulletX + 'vw';
-
 
         
         const bulletId = document.getElementById('board');
         bulletId.appendChild(this.domBullet);
     }
     updateBullet(){
-        this.domBullet.style.left = this.bulletX += this.directionX;
-        this.domBullet.style.bottom = this.bulletY += this.directionY;
+        const dx = this.targetX - this.bulletX;
+        const dy = this.targetY - this.bulletY;
+
+        const magnitude = Math.sqrt(dx * dx + dy * dy);
+        const normDX = dx / magnitude;
+        const normDY = dy / magnitude;
+
+        this.bulletX += normDX * this.speed;
+        this.bulletY += normDY * this.speed;
+
+        this.domBullet.style.left = this.bulletX + 'vw'
+        this.domBullet.style.bottom = this.bulletY + 'vh'
     }
 }
        
@@ -258,15 +313,11 @@ class Zombie{
         this.width = 3.5;
         this.heigth = 7;
         this.health = 2
-        this.speed = 1
+        this.speed = 1.5;
 
         this.domZombie = null
         this.createZombie()
         
-    }
-    moveRight(){
-        this.positionX++;
-        this.domZombie.style.left = this.positionX + 'vw'
     }
 
     createZombie(){
@@ -295,30 +346,24 @@ class Zombie{
 
         this.domZombie.style.left = this.positionX + 'vw';
         this.domZombie.style.bottom = this.positionY + 'vh'
-    //     if(player.positionY < this.domZombie.positionY){
-    //         this.domZombie.positionY--;
-    //         this.domZombie.style.bottom = this.domZombie.positionY +'vh'
-    //     }else{
-    //          this.domZombie.positionY++;
-    //          this.domZombie.style.bottom = this.domZombie.positionY +'vh'
-    //      }
-    //      if(player.positionX < this.domZombie.positionX){
-    //          this.domZombie.positionX--;
-    //          this.domZombie.style.left = this.domZombie.positionX +'vw'
-    //     } else {
-    //          this.domZombie.positionX++;
-    //          this.domZombie.style.left = this.domZombie.positionX +'vw'
-    //     }
+    }
+    checkCollisionBullet(bullet){
+        const distance = Math.sqrt((this.positionX - bullet.positionX) **2 + (this.positionY - bullet.positionY) ** 2);
+        if(distance <= 7){
+            return true;
+        }
+        return false
     }
 }
 
-/*class ZombieBoss{
+class ZombieBoss{
     constructor(){
         this.positionX = Math.random() * (100 - 0);
         this.positionY = Math.random() * (100 - 0);
         this.width = 7;
         this.heigth = 14;
         this.health = 10
+        this.speed = 1
 
         this.domZombie2 = null
         this.createZombie()
@@ -337,7 +382,28 @@ class Zombie{
         const zombieId = document.getElementById('board')
         zombieId.appendChild(this.domZombie2);
     }
-}   */
+    bossZombieMouvement(player){
+        const distX = player.positionX - this.positionX;
+        const distY = player.positionY - this.positionY;
+        const distance = Math.sqrt(distX * distX + distY * distY)
+
+        const vx = (distX / distance) * this.speed;
+        const vy = (distY / distance) * this.speed;
+
+        this.positionX += vx;
+        this.positionY += vy
+
+        this.domZombie2.style.left = this.positionX + 'vw';
+        this.domZombie2.style.bottom = this.positionY + 'vh'
+    }
+    checkCollisionBullet(bullet){
+        const distance = Math.sqrt((this.positionX - bullet.positionX) **2 + (this.positionY - bullet.positionY) ** 2);
+        if(distance <= 7){
+            return true;
+        }
+        return false
+    }
+}   
 
 
 
@@ -347,15 +413,15 @@ class Bonus{
     constructor(){
         this.positionX = Math.random() * (95 - 1);
         this.positionY = Math.random() * (95 - 1);
-        this.width = 1.5;
-        this.heigth = 3;
+        this.width = 2.5;
+        this.heigth = 5;
         
         this.domBonus = null
         this.createBonus()
     }
 
     createBonus(){
-        this.domBonus = document.createElement('div');
+        this.domBonus = document.createElement('img');
         this.domBonus.className = 'bonus'
 
         this.domBonus.style.bottom = this.positionY + 'vh'
@@ -363,13 +429,32 @@ class Bonus{
         this.domBonus.style.height = this.heigth + 'vh'
         this.domBonus.style.width = this.width + 'vw'
         
+        this.domBonus.setAttribute('src', '../img/bonus.png')
         const bonusId = document.getElementById('board')
         bonusId.appendChild(this.domBonus);
     }
 }
 
 
+class Timer{
+    constructor(){
+        this.positionX = 98
+        this.positionY = 1
 
+        this.domTimer = null
+        this.createTimer();
+    }
+    createTimer(){
+        this.domTimer = document.createElement('board');
+        this.domTimer.id = 'timer';
+        
+        this.domTimer.style.bottom = this.positionY + 'vh'
+        this.domTimer.style.left = this.positionX + 'vw'
+
+        const timerId = document.getElementById('board');
+        timerId.appendChild(this.domTimer);
+    }
+}
 
 
 

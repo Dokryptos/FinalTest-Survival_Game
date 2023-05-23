@@ -20,16 +20,17 @@ body{
 .zombie{
     position: absolute;
     border-radius: 6em;
+    transform: translate(-50%, -50%);
     
 }
 .bonus{
-    background-color: rgba(230, 175, 9, 0.993);
     position: absolute;
     border-radius: 6em;
 }
 .boss{
     position: absolute;
     border-radius: 6em;
+    transform: translate(-50%, -50%);
 }
 #counter{
     position: fixed;
@@ -42,4 +43,11 @@ body{
     position: absolute;
     background-color: black;
     border: 2em;
+}
+#timer{
+    position: fixed;
+    text-align: left;
+    font-size: 20em;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: rgb(255, 255, 255);
 }
