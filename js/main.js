@@ -40,6 +40,7 @@ class Game{
                         this.deleteZombie(enemy);
 
                         this.point += 300;
+                        this.pointId.innerText = `Point : ${this.point}`    
 
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                     }
@@ -76,6 +77,7 @@ class Game{
                         this.deleteBossZombie(enemy);
                         
                         this.point += 500;
+                        this.pointId.innerText = `Point : ${this.point}`    
 
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                     }
@@ -122,8 +124,6 @@ class Game{
 
 
             this.timerId.innerText = `Timer : ${this.timer}`
-
-
             this.pointId.innerText = `Point : ${this.point}`     
         }, 1000)
     }
@@ -196,11 +196,6 @@ class Game{
     }
 
     }
-    addCounter(){
-        const pointCounter = document.getElementById('counter');    
-        pointCounter.textContent(this.point)
-    }
-    
 }
 
 
@@ -282,16 +277,16 @@ class Bullet{
     constructor(playerX, playerY, targetX, targetY){
      this.bulletX = playerX;
      this.bulletY = playerY; 
-     this.speed = 5;
+     this.speed = 10;
 
      this.targetX = targetX
      this.targetY = targetY
 
-     this.directionX = (this.targetX - this.bulletX)/ this.speed
+     this.directionX = (this.targetX - this.bulletX) / this.speed
      this.directionY = (this.targetY - this.bulletY) / this.speed
 
-     this.width = 0.5;
-     this.height = 0.5;
+     this.width = 5;
+     this.height = 5;
      this.domBullet = null
         
      this.createBullet()
@@ -311,12 +306,13 @@ class Bullet{
     }
     updateBullet(){
         const dx = this.targetX - this.bulletX;
-        const dy = this.targetY - this.bulletY;
 
+        const dy = this.targetY - this.bulletY;
+        
         const magnitude = Math.sqrt(dx * dx + dy * dy);
         const normDX = dx / magnitude;
         const normDY = dy / magnitude;
-
+        console.log(normDX, normDY)
         this.bulletX += normDX * this.speed;
         this.bulletY += normDY * this.speed;
 
@@ -361,10 +357,12 @@ class Zombie{
 
         const vx = (distX / distance) * this.speed;
         const vy = (distY / distance) * this.speed;
+        const angle = Math.atan2(distY, distX) * (180 / Math.PI)
 
         this.positionX += vx;
         this.positionY += vy
 
+        this.domZombie.style.transform = `rotate(${angle}deg)`
         this.domZombie.style.left = this.positionX + 'vw';
         this.domZombie.style.bottom = this.positionY + 'vh'
     }
@@ -375,6 +373,7 @@ class Zombie{
         }
         return false
     }
+
 }
 
 class ZombieBoss{
@@ -410,10 +409,12 @@ class ZombieBoss{
 
         const vx = (distX / distance) * this.speed;
         const vy = (distY / distance) * this.speed;
+        const angle = Math.atan2(distY, distX) * (180 / Math.PI);
 
         this.positionX += vx;
         this.positionY += vy
 
+        this.domZombie2.style.transform = `rotate(${angle}deg)`
         this.domZombie2.style.left = this.positionX + 'vw';
         this.domZombie2.style.bottom = this.positionY + 'vh'
     }
@@ -478,27 +479,6 @@ class Timer{
     }
 }
 
-class Point{
-    constructor(){
-        this.positionX = 95
-        this.positionY = 95 
-        this.domBonus = null
-
-        this.createPoint()
-    }
-
-    createPoint(){
-        this.domBonus = document.createElement('div');
-        this.domBonus.id = 'point'
-
-        this.domBonus.style.bottom = this.positionY + 'vh'
-        this.domBonus.style.left = this.positionX + 'vw'
-        
-        this.domBonus.setAttribute('src', '../img/bonus.png')
-        const bonusId = document.getElementById('board')
-        bonusId.appendChild(this.domBonus);
-    }
-}
 
 //Event listener 
 const game = new Game();

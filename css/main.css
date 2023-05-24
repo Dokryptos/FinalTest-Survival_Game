@@ -9,8 +9,6 @@ body{
     background-image: url('../img/maps-2.jpg');
     background-repeat: no-repeat;
     background-size: cover; 
-    overflow: hidden;
-    
 }
 #player{
     position: absolute;
@@ -20,7 +18,6 @@ body{
 .zombie{
     position: absolute;
     border-radius: 6em;
-    transform: translate(-50%, -50%);
     
 }
 .bonus{
@@ -30,7 +27,6 @@ body{
 .boss{
     position: absolute;
     border-radius: 6em;
-    transform: translate(-50%, -50%);
 }
 #top{
     padding: 0.5em 0.5em;
@@ -43,11 +39,5 @@ body{
 .bullet{
     position: absolute;
     background-color: black;
-    border: 2em;
-}
-#timer{
-    
-}
-#point{
-
+    border-radius: 2em;
 }

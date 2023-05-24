@@ -1,0 +1,24 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+#gameover{
+    height: 100vh;
+    width: 100vw;
+    background-color: black;
+}
+
+#gameover img{
+    height: 100vh;
+    width: auto;
+    position: absolute;
+    padding: 0em 15em;
+}
+#click{
+    position: absolute;
+    height: 9vh;
+    width: 60vh;
+    top: 77vh;
+    left: 77vh;
+}
