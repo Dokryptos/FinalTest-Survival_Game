@@ -32,9 +32,10 @@ body{
     border-radius: 6em;
     transform: translate(-50%, -50%);
 }
-#counter{
-    position: fixed;
-    font-size: 20em;
+#top{
+    padding: 0.5em 0.5em;
+    position: absolute;
+    font-size: 1.5em;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: rgb(255, 255, 255);
 }
@@ -45,9 +46,8 @@ body{
     border: 2em;
 }
 #timer{
-    position: fixed;
-    text-align: left;
-    font-size: 20em;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: rgb(255, 255, 255);
+    
+}
+#point{
+
 }

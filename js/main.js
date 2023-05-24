@@ -9,9 +9,13 @@ class Game{
 
         this.timer = 0;
         this.point = 0;
+
+        this.pointId = document.getElementById('point');
+        this.timerId = document.getElementById('timer');
         }
 
     start(){
+
         this.player = new Player();
         this.eventListener()
 
@@ -27,13 +31,16 @@ class Game{
             })
 
             this.bulletArr.forEach((elm) => {
-                elm.update()
+                elm.updateBullet()
             })
 
             this.bulletArr.forEach((bullet) => {
                 this.zombieArr.forEach((enemy) => {
                     if(enemy.checkCollisionBullet(bullet)){
                         this.deleteZombie(enemy);
+
+                        this.point += 300;
+
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                     }
                 });
@@ -42,7 +49,7 @@ class Game{
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 5){
-                    alert('gameOver')
+                    //alert('gameOver')
                 }
             })
 
@@ -67,6 +74,9 @@ class Game{
                 this.bossArr.forEach((enemy) => {
                     if(enemy.checkCollisionBullet(bullet)){
                         this.deleteBossZombie(enemy);
+                        
+                        this.point += 500;
+
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                     }
                 });
@@ -76,7 +86,7 @@ class Game{
             this.bossArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 5){
-                    alert('gameOver')
+                    //alert('gameOver')
                 }
             })
 
@@ -92,19 +102,29 @@ class Game{
 
             this.bonusArr.forEach((bonus) => {
                 const distance = Math.sqrt((bonus.positionX - this.player.positionX) ** 2 + (bonus.positionY - this.player.positionY) **2);
-                if(distance <= 5){
+                if(distance <= 8){
                     
                     this.deleteBonus(bonus)
+                    this.point += 200;
                     
-
-                    this.point += 200;                
+                    
                 }
+
+                this.pointId.innerText = `Point : ${this.point}`  
             })
              
         }, 300)
 
         setInterval(() =>{
+
             this.timer++;
+            this.point += 10;
+
+
+            this.timerId.innerText = `Timer : ${this.timer}`
+
+
+            this.pointId.innerText = `Point : ${this.point}`     
         }, 1000)
     }
 
@@ -115,6 +135,7 @@ class Game{
         if(index !== -1){
             this.bossArr.splice(index, 1);
         }
+        zombie.domZombie2.remove();
     }
 
     deleteZombie(zombie){
@@ -122,15 +143,15 @@ class Game{
         if(index !== -1){
             this.zombieArr.splice(index, 1);
         }
+        zombie.domZombie.remove()
     }
 
     deleteBonus(bonus){
         const index = this.bonusArr.indexOf(bonus)
         if(index !== -1){
             this.bonusArr.splice(index, 1);
-            
         }
-
+        bonus.domBonus.remove()
 
     }
 
@@ -273,7 +294,7 @@ class Bullet{
      this.height = 0.5;
      this.domBullet = null
         
-     createBullet()
+     this.createBullet()
     }
     createBullet(){
         this.domBullet = document.createElement("div")
@@ -417,6 +438,7 @@ class Bonus{
         this.heigth = 5;
         
         this.domBonus = null
+
         this.createBonus()
     }
 
@@ -456,10 +478,27 @@ class Timer{
     }
 }
 
+class Point{
+    constructor(){
+        this.positionX = 95
+        this.positionY = 95 
+        this.domBonus = null
 
+        this.createPoint()
+    }
 
+    createPoint(){
+        this.domBonus = document.createElement('div');
+        this.domBonus.id = 'point'
 
-
+        this.domBonus.style.bottom = this.positionY + 'vh'
+        this.domBonus.style.left = this.positionX + 'vw'
+        
+        this.domBonus.setAttribute('src', '../img/bonus.png')
+        const bonusId = document.getElementById('board')
+        bonusId.appendChild(this.domBonus);
+    }
+}
 
 //Event listener 
 const game = new Game();
