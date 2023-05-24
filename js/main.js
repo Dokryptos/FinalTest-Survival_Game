@@ -50,7 +50,7 @@ class Game{
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 5){
-                    //alert('gameOver')
+                    window.open('gameover.html', '_self')
                 }
             })
 
@@ -88,7 +88,7 @@ class Game{
             this.bossArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 5){
-                    //alert('gameOver')
+                    window.open('gameover.html', '_self')
                 }
             })
 
