@@ -34,6 +34,7 @@ class Game{
 
              this.bulletArr.forEach((elm) => {
                 elm.updateBullet()
+                console.log(elm);
              })
 
             this.bulletArr.forEach((bullet) => {
@@ -54,12 +55,12 @@ class Game{
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 4){
-                    //window.open('gameover.html', '_self')
+                    window.open('gameover.html', '_self')
                 }
             })
 
 
-        }, 200)
+        }, 75)
 
         
         setInterval(() =>{
@@ -84,6 +85,7 @@ class Game{
                         this.pointId.innerText = `Score : ${this.point}`    
 
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
+                        bullet.domBullet.remove()
                     }
                 });
             });
@@ -92,11 +94,11 @@ class Game{
             this.bossArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 4){
-                    //window.open('gameover.html', '_self')
+                    window.open('gameover.html', '_self')
                 }
             })
 
-        }, 300)
+        }, 100)
 
 
         setInterval(() =>{
@@ -199,13 +201,15 @@ class Game{
         })
 
     document.addEventListener('click', (event) =>{
-        // event.preventDefault();
-        // const newBullet = new Bullet(this.player.positionX, this.player.positionY, event.clientX, event.clientY)
-        // this.bulletArr.push(newBullet); 
-        // }
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
-        const bullet = new Bullet(this.player.positionX, this.player.positionY, mouseX, mouseY);
+        event.preventDefault();
+
+        let vw = window.innerWidth;
+        let vh = window.innerHeight;
+        const mouseX = event.clientX / vw * 100;
+        const mouseY = event.clientY / vh * 100;
+
+
+        const bullet = new Bullet(this.player.positionX + this.player.width / 2, this.player.positionY + this.player.heigth / 2, mouseX, mouseY);
         this.bulletArr.push(bullet);
     });
         
@@ -308,14 +312,11 @@ class Bullet{
     constructor(playerX, playerY, targetX, targetY){
      this.bulletX = playerX;
      this.bulletY = playerY; 
-     this.speed = 4;
+     this.speed = 5;
 
      this.targetX = targetX
      this.targetY = targetY
 
-     //this.directionX = (this.targetX - this.bulletX) / this.speed
-     //this.directionY = (this.targetY - this.bulletY) / this.speed
-    
 
      this.width = 0.5;
      this.height = 1;
@@ -339,17 +340,19 @@ class Bullet{
     updateBullet(){
         const dx = this.targetX - this.bulletX;
         const dy = this.targetY - this.bulletY;
-        
+
         const magnitude = Math.sqrt(dx * dx + dy * dy);
-        const normDX = dx / magnitude;
-        const normDY = dy / magnitude;
+        const normDX = dx / magnitude
+        const normDY = dy / magnitude
 
-
-        this.bulletX += normDX * this.speed;
-        this.bulletY += normDY * this.speed;
+        this.targetX += normDX * this.speed
+        this.targetY += normDY * this.speed
+        this.bulletX += normDX * this.speed
+        this.bulletY += normDY * this.speed
 
         this.domBullet.style.left = this.bulletX + 'vw'
         this.domBullet.style.bottom = this.bulletY + 'vh'
+
     }
 }
        
@@ -362,7 +365,7 @@ class Zombie{
         this.width = 3.5;
         this.heigth = 7;
         this.health = 2
-        this.speed = 1;
+        this.speed = 0.5;
 
         this.domZombie = null
         this.createZombie()
@@ -415,7 +418,7 @@ class ZombieBoss{
         this.width = 7;
         this.heigth = 14;
         this.health = 10;
-        this.speed = 0.8;
+        this.speed = 0.5;
 
         this.domZombie2 = null
         this.createZombie()
