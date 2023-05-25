@@ -259,7 +259,7 @@ class Player{
         this.domPlayer.style.bottom = this.positionY + 'vh';
         this.domPlayer.style.left = this.positionX + 'vw';
 
-        this.domPlayer.setAttribute('src', '../img/player.gif')
+        this.domPlayer.setAttribute('src', './img/player.gif')
         
         const playerId = document.getElementById('board');
         playerId.appendChild(this.domPlayer);
@@ -484,7 +484,7 @@ class Bonus{
         this.domBonus.style.height = this.heigth + 'vh'
         this.domBonus.style.width = this.width + 'vw'
         
-        this.domBonus.setAttribute('src', '../img/bonus.png')
+        this.domBonus.setAttribute('src', './img/bonus.png')
         const bonusId = document.getElementById('board')
         bonusId.appendChild(this.domBonus);
     }
