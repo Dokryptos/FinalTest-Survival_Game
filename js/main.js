@@ -26,7 +26,7 @@ class Game{
         setInterval(() => {
             const newZombie = new Zombie();
             this.zombieArr.push(newZombie);
-        }, 500)
+        }, 800)
         
         
         setInterval(() =>{
@@ -70,7 +70,7 @@ class Game{
         setInterval(() =>{
              const newBoss = new ZombieBoss();
              this.bossArr.push(newBoss);
-        }, 5000);
+        }, 10000);
         
         setInterval(() =>{
 
