@@ -21,10 +21,11 @@ class Game{
         this.player = new Player();
         this.eventListener()
 
-        setInterval(() => {
+        setTimeout(() => {
             const newZombie = new Zombie();
             this.zombieArr.push(newZombie);
         }, 2000)
+        
         
         setInterval(() =>{
 
@@ -34,28 +35,34 @@ class Game{
 
              this.bulletArr.forEach((elm) => {
                 elm.updateBullet()
-                console.log(elm);
              })
 
             this.bulletArr.forEach((bullet) => {
-                this.zombieArr.forEach((enemy) => {
-                    if(enemy.checkCollisionBullet(bullet) == true){
+                this.zombieArr.forEach((zombie) => {
 
-                        this.deleteZombie(enemy);
+                    //if(zombie.checkCollisionBullet(bullet)){
+                      console.log(zombie);
+                      console.log(bullet);
+                    const distance = Math.sqrt((zombie.positionX - bullet.bulletX) ** 2 + (zombie.positionY - bullet.bulletY) ** 2);
+                    console.log(distance)
+                    if(distance <= 7){
+
+                        console.log(bullet, zombie)
+                        this.deleteZombie(zombie);
 
                         this.point += 300;
-                        this.pointId.innerText = `Score : ${this.point}`    
-
+                           
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                         bullet.domBullet.remove();
                     }
+                        this.pointId.innerText = `Score : ${this.point}` 
                 });
             });
 
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 4){
-                    window.open('gameover.html', '_self')
+                    //window.open('gameover.html', '_self')
                 }
             })
 
@@ -82,11 +89,11 @@ class Game{
                         this.deleteBossZombie(enemy);
                         
                         this.point += 500;
-                        this.pointId.innerText = `Score : ${this.point}`    
-
+                        
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                         bullet.domBullet.remove()
                     }
+                        this.pointId.innerText = `Score : ${this.point}` 
                 });
             });
 
@@ -94,7 +101,7 @@ class Game{
             this.bossArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 4){
-                    window.open('gameover.html', '_self')
+                    //window.open('gameover.html', '_self')
                 }
             })
 
@@ -206,9 +213,9 @@ class Game{
         let vw = window.innerWidth;
         let vh = window.innerHeight;
         const mouseX = event.clientX / vw * 100;
-        const mouseY = event.clientY / vh * 100;
+        const mouseY = 100 - event.clientY / vh * 100;
 
-
+        console.log("mouseX", mouseX, mouseY);
         const bullet = new Bullet(this.player.positionX + this.player.width / 2, this.player.positionY + this.player.heigth / 2, mouseX, mouseY);
         this.bulletArr.push(bullet);
     });
@@ -218,7 +225,10 @@ class Game{
     document.addEventListener('mousemove', handleMouseMove)
 
     function handleMouseMove(event){
-        let mouseX = event.clientX;
+        let vw = window.innerWidth;
+        let vh = window.innerHeight;
+        let mouseX = event.clientX 
+        let mouseY = event.clientY
         let imageWidth = playerImgId.offsetWidth;
         let imageCenterX = playerImgId.offsetLeft + imageWidth / 2;
 
@@ -312,7 +322,7 @@ class Bullet{
     constructor(playerX, playerY, targetX, targetY){
      this.bulletX = playerX;
      this.bulletY = playerY; 
-     this.speed = 5;
+     this.speed = 2;
 
      this.targetX = targetX
      this.targetY = targetY
