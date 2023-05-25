@@ -26,7 +26,7 @@ class Game{
         setInterval(() => {
             const newZombie = new Zombie();
             this.zombieArr.push(newZombie);
-        }, 1000)
+        }, 700)
         
         
         setInterval(() =>{
@@ -59,7 +59,7 @@ class Game{
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= collisionDistance){
-                    //window.open('gameover.html', '_self')
+                    window.open('gameover.html', '_self')
                 }
             })
 
@@ -70,7 +70,7 @@ class Game{
         setInterval(() =>{
              const newBoss = new ZombieBoss();
              this.bossArr.push(newBoss);
-        }, 25000);
+        }, 5000);
         
         setInterval(() =>{
 
@@ -98,7 +98,7 @@ class Game{
             this.bossArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= 4){
-                    //window.open('gameover.html', '_self')
+                    window.open('gameover.html', '_self')
                 }
             })
 
@@ -114,7 +114,7 @@ class Game{
 
             this.bonusArr.forEach((bonus) => {
                 const distance = Math.sqrt((bonus.positionX - this.player.positionX) ** 2 + (bonus.positionY - this.player.positionY) **2);
-                if(distance <= 6){
+                if(distance <= 8){
                     
                     this.deleteBonus(bonus)
                     this.point += 200;
@@ -320,7 +320,7 @@ class Bullet{
     constructor(playerX, playerY, targetX, targetY){
      this.bulletX = playerX;
      this.bulletY = playerY; 
-     this.speed = 2.5;
+     this.speed = 3.5;
 
      this.targetX = targetX
      this.targetY = targetY
@@ -373,7 +373,7 @@ class Zombie{
         this.width = 3.5;
         this.heigth = 7;
         this.health = 2
-        this.speed = Math.random() * (1.2 - 0.6);
+        this.speed = Math.random() * (1.5 - 0.8);
 
         this.domZombie = null
         this.createZombie()
@@ -426,7 +426,7 @@ class ZombieBoss{
         this.width = 7;
         this.heigth = 14;
         this.health = 10;
-        this.speed = 0.5;
+        this.speed = Math.random() * (1.8 - 0.8);
 
         this.domZombie2 = null
         this.createZombie()
@@ -463,7 +463,7 @@ class ZombieBoss{
     }
     checkCollisionBullet(bullet){
         const distance = Math.sqrt((this.positionX - bullet.bulletX)  ** 2 + (this.positionY - bullet.bulletY) ** 2);
-        if(distance <= collisionDistance){
+        if(distance <= 8){
             return true;
         }
         return false
