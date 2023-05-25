@@ -33,7 +33,6 @@ class Game{
             })
 
              this.bulletArr.forEach((elm) => {
-                console.log(this.bulletArr) 
                 elm.updateBullet()
              })
 
@@ -206,7 +205,7 @@ class Game{
         // }
         const mouseX = event.clientX;
         const mouseY = event.clientY;
-        const bullet = this.player.shoot(mouseX, mouseY)
+        const bullet = new Bullet(this.player.positionX, this.player.positionY, mouseX, mouseY);
         this.bulletArr.push(bullet);
     });
         
@@ -301,11 +300,6 @@ class Player{
             this.domPlayer.style.left = this.positionX +'vw'
         }
     }
-    shoot(mouseX, mouseY){
-        const bullet = new Bullet(this.positionX, this.positionY, mouseX, mouseY);
-        return bullet;
-    }
-
 }
 
 
@@ -319,8 +313,9 @@ class Bullet{
      this.targetX = targetX
      this.targetY = targetY
 
-     this.directionX = (this.targetX - this.bulletX) / this.speed
-     this.directionY = (this.targetY - this.bulletY) / this.speed
+     //this.directionX = (this.targetX - this.bulletX) / this.speed
+     //this.directionY = (this.targetY - this.bulletY) / this.speed
+    
 
      this.width = 0.5;
      this.height = 1;
@@ -343,15 +338,15 @@ class Bullet{
     }
     updateBullet(){
         const dx = this.targetX - this.bulletX;
-
         const dy = this.targetY - this.bulletY;
         
         const magnitude = Math.sqrt(dx * dx + dy * dy);
         const normDX = dx / magnitude;
         const normDY = dy / magnitude;
-        console.log(normDX, normDY)
-        this.bulletX -= normDX * this.speed;
-        this.bulletY -= normDY * this.speed;
+
+
+        this.bulletX += normDX * this.speed;
+        this.bulletY += normDY * this.speed;
 
         this.domBullet.style.left = this.bulletX + 'vw'
         this.domBullet.style.bottom = this.bulletY + 'vh'
@@ -382,7 +377,7 @@ class Zombie{
         this.domZombie.style.left = this.positionX + 'vw'
         this.domZombie.style.height = this.heigth + 'vh'
         this.domZombie.style.width = this.width + 'vw'
-        this.domZombie.setAttribute('src', '../img/zombie_test.gif')
+        this.domZombie.setAttribute('src', './img/zombie_test.gif')
         
         const zombieId = document.getElementById('board')
         zombieId.appendChild(this.domZombie);
@@ -434,7 +429,7 @@ class ZombieBoss{
         this.domZombie2.style.left = this.positionX + 'vw'
         this.domZombie2.style.height = this.heigth + 'vh'
         this.domZombie2.style.width = this.width + 'vw'
-        this.domZombie2.setAttribute('src', '../img/zombie_test.gif')
+        this.domZombie2.setAttribute('src', './img/zombie_test.gif')
         
         const zombieId = document.getElementById('board')
         zombieId.appendChild(this.domZombie2);
