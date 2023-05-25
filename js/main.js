@@ -1,3 +1,5 @@
+const collisionDistance = 4;
+
 class Game{
     constructor(){
         this.player = null;
@@ -21,10 +23,10 @@ class Game{
         this.player = new Player();
         this.eventListener()
 
-        setTimeout(() => {
+        setInterval(() => {
             const newZombie = new Zombie();
             this.zombieArr.push(newZombie);
-        }, 2000)
+        }, 1000)
         
         
         setInterval(() =>{
@@ -40,12 +42,7 @@ class Game{
             this.bulletArr.forEach((bullet) => {
                 this.zombieArr.forEach((zombie) => {
 
-                    //if(zombie.checkCollisionBullet(bullet)){
-                      console.log(zombie);
-                      console.log(bullet);
-                    const distance = Math.sqrt((zombie.positionX - bullet.bulletX) ** 2 + (zombie.positionY - bullet.bulletY) ** 2);
-                    console.log(distance)
-                    if(distance <= 7){
+                    if(zombie.checkCollisionBullet(bullet)){
 
                         console.log(bullet, zombie)
                         this.deleteZombie(zombie);
@@ -61,7 +58,7 @@ class Game{
 
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
-                if(distance <= 4){
+                if(distance <= collisionDistance){
                     //window.open('gameover.html', '_self')
                 }
             })
@@ -117,7 +114,7 @@ class Game{
 
             this.bonusArr.forEach((bonus) => {
                 const distance = Math.sqrt((bonus.positionX - this.player.positionX) ** 2 + (bonus.positionY - this.player.positionY) **2);
-                if(distance <= 8){
+                if(distance <= 6){
                     
                     this.deleteBonus(bonus)
                     this.point += 200;
@@ -227,12 +224,13 @@ class Game{
     function handleMouseMove(event){
         let vw = window.innerWidth;
         let vh = window.innerHeight;
-        let mouseX = event.clientX 
-        let mouseY = event.clientY
+        let mouseX = event.clientX / vw * 100;
+        let mouseY = 100 - event.clientY/ vh * 100;
+
         let imageWidth = playerImgId.offsetWidth;
         let imageCenterX = playerImgId.offsetLeft + imageWidth / 2;
 
-        let rotationAngle = (mouseX - imageCenterX) / imageWidth * 15;
+        let rotationAngle = (mouseX - imageCenterX) / imageWidth * 180;
         playerImgId.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
     }
 
@@ -322,7 +320,7 @@ class Bullet{
     constructor(playerX, playerY, targetX, targetY){
      this.bulletX = playerX;
      this.bulletY = playerY; 
-     this.speed = 2;
+     this.speed = 2.5;
 
      this.targetX = targetX
      this.targetY = targetY
@@ -375,7 +373,7 @@ class Zombie{
         this.width = 3.5;
         this.heigth = 7;
         this.health = 2
-        this.speed = 0.5;
+        this.speed = Math.random() * (1.2 - 0.6);
 
         this.domZombie = null
         this.createZombie()
@@ -412,8 +410,8 @@ class Zombie{
         this.domZombie.style.bottom = this.positionY + 'vh'
     }
     checkCollisionBullet(bullet){
-        const distance = Math.sqrt((this.positionX - bullet.positionX) ** 2 + (this.positionY - bullet.positionY) ** 2);
-        if(distance <= 7){
+        const distance = Math.sqrt((this.positionX - bullet.bulletX) ** 2 + (this.positionY - bullet.bulletY) ** 2);
+        if(distance <= collisionDistance){
             return true;
         }
         return false
@@ -464,8 +462,8 @@ class ZombieBoss{
         this.domZombie2.style.bottom = this.positionY + 'vh'
     }
     checkCollisionBullet(bullet){
-        const distance = Math.sqrt((this.positionX - bullet.positionX)  ** 2 + (this.positionY - bullet.positionY) ** 2);
-        if(distance <= 7){
+        const distance = Math.sqrt((this.positionX - bullet.bulletX)  ** 2 + (this.positionY - bullet.bulletY) ** 2);
+        if(distance <= collisionDistance){
             return true;
         }
         return false
