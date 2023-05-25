@@ -26,7 +26,7 @@ class Game{
         setInterval(() => {
             const newZombie = new Zombie();
             this.zombieArr.push(newZombie);
-        }, 700)
+        }, 500)
         
         
         setInterval(() =>{
@@ -426,7 +426,7 @@ class ZombieBoss{
         this.width = 7;
         this.heigth = 14;
         this.health = 10;
-        this.speed = Math.random() * (1.8 - 0.8);
+        this.speed = Math.random() * (1.8 - 1.2);
 
         this.domZombie2 = null
         this.createZombie()
