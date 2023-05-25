@@ -13,11 +13,11 @@ class Game{
         this.pointId = document.getElementById('point');
         this.timerId = document.getElementById('timer');
         this.audioId = document.getElementById("backgroundMusic");
-
+        this.iconAudioId = document.getElementById('volumeIcon')
         }
 
     start(){
-        this.audioId.play()
+
         this.player = new Player();
         this.eventListener()
 
@@ -44,7 +44,7 @@ class Game{
                         this.deleteZombie(enemy);
 
                         this.point += 300;
-                        this.pointId.innerText = `Point : ${this.point}`    
+                        this.pointId.innerText = `Score : ${this.point}`    
 
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                         bullet.domBullet.remove();
@@ -54,7 +54,7 @@ class Game{
 
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
-                if(distance <= 5){
+                if(distance <= 4){
                     //window.open('gameover.html', '_self')
                 }
             })
@@ -82,7 +82,7 @@ class Game{
                         this.deleteBossZombie(enemy);
                         
                         this.point += 500;
-                        this.pointId.innerText = `Point : ${this.point}`    
+                        this.pointId.innerText = `Score : ${this.point}`    
 
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                     }
@@ -92,7 +92,7 @@ class Game{
 
             this.bossArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
-                if(distance <= 5){
+                if(distance <= 4){
                     //window.open('gameover.html', '_self')
                 }
             })
@@ -117,7 +117,7 @@ class Game{
                     
                 }
 
-                this.pointId.innerText = `Point : ${this.point}`  
+                this.pointId.innerText = `Score : ${this.point}`  
             })
              
         }, 300)
@@ -129,7 +129,7 @@ class Game{
 
 
             this.timerId.innerText = `Timer : ${this.timer}`
-            this.pointId.innerText = `Point : ${this.point}`     
+            this.pointId.innerText = `Score : ${this.point}`     
         }, 1000)
         
         
@@ -223,12 +223,15 @@ class Game{
         playerImgId.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
     }
 
-    }
-    pauseMusic(){
-        this.audioId.pause();
-    }
-    playMusic(){
-        this.audioId.play();
+    this.iconAudioId.addEventListener('click', ()=>{
+        if(this.audioId.paused){
+            this.audioId.play();
+            this.iconAudioId.src = '../';
+        } else {
+            this.audioId.pause();
+            this.iconAudioId.src = "/img/sound_off.png"
+        }
+    })
     }
 }
 
@@ -401,7 +404,7 @@ class Zombie{
         this.domZombie.style.bottom = this.positionY + 'vh'
     }
     checkCollisionBullet(bullet){
-        const distance = Math.sqrt((this.positionX - bullet.positionX) **2 + (this.positionY - bullet.positionY) ** 2);
+        const distance = Math.sqrt((this.positionX - bullet.positionX) ** 2 + (this.positionY - bullet.positionY) ** 2);
         if(distance <= 7){
             return true;
         }
@@ -453,7 +456,7 @@ class ZombieBoss{
         this.domZombie2.style.bottom = this.positionY + 'vh'
     }
     checkCollisionBullet(bullet){
-        const distance = Math.sqrt((this.positionX - bullet.positionX) **2 + (this.positionY - bullet.positionY) ** 2);
+        const distance = Math.sqrt((this.positionX - bullet.positionX)  ** 2 + (this.positionY - bullet.positionY) ** 2);
         if(distance <= 7){
             return true;
         }

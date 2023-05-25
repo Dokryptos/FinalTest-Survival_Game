@@ -43,7 +43,10 @@ body{
     border-radius: 2em;
 }
 
-.volume-btn{
-
-    display: none;
+#volumeIcon{
+    cursor: pointer;
+    position: absolute;
+    height: 2em;
+    width: 2em;
+    top: 3em;
 }
