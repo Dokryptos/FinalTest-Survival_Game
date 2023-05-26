@@ -245,7 +245,7 @@ class Game{
             this.iconAudioId.src = './img/sound_on.png';
         } else {
             this.audioId.pause();
-            this.iconAudioId.src = "./img/sound_off.png"
+            this.iconAudioId.src = "./img/sound_of.png"
         }
     })
     }
@@ -376,7 +376,7 @@ class Zombie{
         this.width = 3.5;
         this.heigth = 7;
         this.health = 2
-        this.speed = Math.random() * (1.5 - 0.8);
+        this.speed = Math.random() * (1.6 - 1);
 
         this.domZombie = null
         this.createZombie()  
