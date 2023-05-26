@@ -20,25 +20,30 @@ class Game{
 
     start(){
 
+        //when we start game we create Player and call all the Event Listener for the game
         this.player = new Player();
         this.eventListener()
 
+        //Creation off Zombie every 0.7 Seconde
         setInterval(() => {
             const newZombie = new Zombie();
             this.zombieArr.push(newZombie);
-        }, 800)
+        }, 700)
         
-        
+        // Update mouvement of zombie, bullet, collision detection between zombie and bullet and collision detection between player and zombie
         setInterval(() =>{
 
+            // Zombie mouvement, use Speed inside the Zombie class for have different result.
             this.zombieArr.forEach((elm) => {
                 elm.zombieMouvement(this.player)
             })
 
+            //Bullet mouvement for follow the direction of the shoot.
              this.bulletArr.forEach((elm) => {
                 elm.updateBullet()
              })
 
+             //Detection collision between Bullet and Zombie, we delete zombie and remove() it if bullet touch him and delete bullet and remove() it too
             this.bulletArr.forEach((bullet) => {
                 this.zombieArr.forEach((zombie) => {
 
@@ -47,7 +52,7 @@ class Game{
                         console.log(bullet, zombie)
                         this.deleteZombie(zombie);
 
-                        this.point += 300;
+                        this.point += 400;
                            
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                         bullet.domBullet.remove();
@@ -56,6 +61,7 @@ class Game{
                 });
             });
 
+            // Detection collision between Player and Zombie
             this.zombieArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
                 if(distance <= collisionDistance){
@@ -63,29 +69,29 @@ class Game{
                 }
             })
 
-
         }, 75)
 
-        
+        //Creation of Big Zombie
         setInterval(() =>{
              const newBoss = new ZombieBoss();
              this.bossArr.push(newBoss);
-        }, 10000);
+        }, 5000);
         
+        // Update mouvement of zombie, bullet, collision detection between zombie and bullet and collision detection between player and zombie
         setInterval(() =>{
 
+            // Zombie mouvement, use Speed inside the Zombie class for have different result.
             this.bossArr.forEach((elm) => {
                 elm.bossZombieMouvement(this.player)
             })
 
-
-
+            //Detection collision between Bullet and Zombie, we delete zombie and remove() it if bullet touch him and delete bullet and remove() it too
             this.bulletArr.forEach((bullet) => {
                 this.bossArr.forEach((enemy) => {
                     if(enemy.checkCollisionBullet(bullet)){
                         this.deleteBossZombie(enemy);
                         
-                        this.point += 500;
+                        this.point += 700;
                         
                         this.bulletArr.splice(this.bulletArr.indexOf(bullet), 1);
                         bullet.domBullet.remove()
@@ -94,22 +100,23 @@ class Game{
                 });
             });
 
-
+            // Detection collision between Player and Zombie
             this.bossArr.forEach((zombie) => {
                 const distance = Math.sqrt((zombie.positionX - this.player.positionX) ** 2 + (zombie.positionY - this.player.positionY) **2);
-                if(distance <= 4){
+                if(distance <= collisionDistance){
                     window.open('gameover.html', '_self')
                 }
             })
 
-        }, 100)
+        }, 75)
 
-
+        //Creation of the Bonus every 5 sec
         setInterval(() =>{
             const newBonus = new Bonus();
             this.bonusArr.push(newBonus);
         }, 5000)
 
+        // Update collision detection between player and bonus and point
         setInterval(() =>{
 
             this.bonusArr.forEach((bonus) => {
@@ -125,8 +132,9 @@ class Game{
                 this.pointId.innerText = `Score : ${this.point}`  
             })
              
-        }, 300)
+        }, 100)
 
+        //set up timer and point 
         setInterval(() =>{
 
             this.timer++;
@@ -142,7 +150,7 @@ class Game{
 }
 
 
-
+    // Delete and update Array for Zombie
     deleteBossZombie(zombie){
         const index = this.bossArr.indexOf(zombie)
         if(index !== -1){
@@ -151,6 +159,7 @@ class Game{
         zombie.domZombie2.remove();
     }
 
+    // Delete and update Array for Boss Zombie
     deleteZombie(zombie){
         const index = this.zombieArr.indexOf(zombie)
         if(index !== -1){
@@ -158,7 +167,7 @@ class Game{
         }
         zombie.domZombie.remove()
     }
-
+    // Delete and update Array for Bonus 
     deleteBonus(bonus){
         const index = this.bonusArr.indexOf(bonus)
         if(index !== -1){
@@ -168,6 +177,7 @@ class Game{
 
     }
 
+    //Event Listener for mouvement of the player with Arrow, click for shot and mouvement of the mouse for player direction 
     eventListener(){
     document.addEventListener('keydown', (event) => {
         
@@ -212,41 +222,36 @@ class Game{
         const mouseX = event.clientX / vw * 100;
         const mouseY = 100 - event.clientY / vh * 100;
 
-        console.log("mouseX", mouseX, mouseY);
         const bullet = new Bullet(this.player.positionX + this.player.width / 2, this.player.positionY + this.player.heigth / 2, mouseX, mouseY);
         this.bulletArr.push(bullet);
     });
         
     const playerImgId = document.getElementById('player')
-
     document.addEventListener('mousemove', handleMouseMove)
 
     function handleMouseMove(event){
         let vw = window.innerWidth;
-        let vh = window.innerHeight;
         let mouseX = event.clientX / vw * 100;
-        let mouseY = 100 - event.clientY/ vh * 100;
-
         let imageWidth = playerImgId.offsetWidth;
         let imageCenterX = playerImgId.offsetLeft + imageWidth / 2;
 
-        let rotationAngle = (mouseX - imageCenterX) / imageWidth * 180;
+        let rotationAngle = (mouseX - imageCenterX) / imageWidth * 22;
         playerImgId.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}deg)`;
     }
 
     this.iconAudioId.addEventListener('click', ()=>{
         if(this.audioId.paused){
             this.audioId.play();
-            this.iconAudioId.src = '../';
+            this.iconAudioId.src = './img/sound_on.png';
         } else {
             this.audioId.pause();
-            this.iconAudioId.src = "/img/sound_off.png"
+            this.iconAudioId.src = "./img/sound_off.png"
         }
     })
     }
 }
 
-
+//Class for design, mouvement of the player and spawn on the middle of the map.
 class Player{
     constructor(){
     this.positionX = 50;
@@ -257,10 +262,8 @@ class Player{
 
 
     this.domPlayer = null
-    
     this.createPlayer();
     
-
     }
     createPlayer(){
         this.domPlayer = document.createElement("img")
@@ -315,7 +318,8 @@ class Player{
 }
 
 
-
+//Class for create a bullet with position of the player and position of the click.
+//Create design, mouvement of the bullet 
 class Bullet{
     constructor(playerX, playerY, targetX, targetY){
      this.bulletX = playerX;
@@ -324,7 +328,6 @@ class Bullet{
 
      this.targetX = targetX
      this.targetY = targetY
-
 
      this.width = 0.5;
      this.height = 1;
@@ -365,7 +368,7 @@ class Bullet{
 }
        
 
-
+//Class for the Zombie, with detection of collision, zombie mouvement atract by the player, design and spawn of the Zombie.
 class Zombie{
     constructor(){
         this.positionX = Math.random() * (100 - 0);
@@ -376,10 +379,8 @@ class Zombie{
         this.speed = Math.random() * (1.5 - 0.8);
 
         this.domZombie = null
-        this.createZombie()
-        
+        this.createZombie()  
     }
-
     createZombie(){
         this.domZombie = document.createElement('img');
         this.domZombie.className = 'zombie'
@@ -419,6 +420,7 @@ class Zombie{
 
 }
 
+//Class for the big Zombie, with detection of collision, zombie mouvement atract by the player, design and spawn of the Boss Zombie.
 class ZombieBoss{
     constructor(){
         this.positionX = Math.random() * (100 - 0);
@@ -470,11 +472,8 @@ class ZombieBoss{
     }
 }   
 
-
-
-
+//Class for design/placement of the bonus
 class Bonus{
-
     constructor(){
         this.positionX = Math.random() * (95 - 1);
         this.positionY = Math.random() * (95 - 1);
@@ -501,28 +500,6 @@ class Bonus{
     }
 }
 
-
-class Timer{
-    constructor(){
-        this.positionX = 98
-        this.positionY = 1
-
-        this.domTimer = null
-        this.createTimer();
-    }
-    createTimer(){
-        this.domTimer = document.createElement('board');
-        this.domTimer.id = 'timer';
-        
-        this.domTimer.style.bottom = this.positionY + 'vh'
-        this.domTimer.style.left = this.positionX + 'vw'
-
-        const timerId = document.getElementById('board');
-        timerId.appendChild(this.domTimer);
-    }
-}
-
-
-//Event listener 
+// Start Game
 const game = new Game();
 game.start()
