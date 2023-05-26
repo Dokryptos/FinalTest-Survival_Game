@@ -144,11 +144,7 @@ class Game{
             this.timerId.innerText = `Timer : ${this.timer}`
             this.pointId.innerText = `Score : ${this.point}`     
         }, 1000)
-        
-        
-
 }
-
 
     // Delete and update Array for Zombie
     deleteBossZombie(zombie){
