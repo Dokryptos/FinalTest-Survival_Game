@@ -372,7 +372,7 @@ class Zombie{
         this.width = 3.5;
         this.heigth = 7;
         this.health = 2
-        this.speed = Math.random() * (1.6 - 1);
+        this.speed = Math.random() * (1.8 - 1.2);
 
         this.domZombie = null
         this.createZombie()  
@@ -424,7 +424,7 @@ class ZombieBoss{
         this.width = 7;
         this.heigth = 14;
         this.health = 10;
-        this.speed = Math.random() * (1.8 - 1.2);
+        this.speed = Math.random() * (2 - 1.4);
 
         this.domZombie2 = null
         this.createZombie()
